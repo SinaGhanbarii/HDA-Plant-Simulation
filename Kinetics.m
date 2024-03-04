@@ -1,4 +1,4 @@
-function dFdV = Kinetics(V,F)
+function dFdV = Kinetics(V,F,T)
 
 Fh = F(1); % [kmol/hr]
 Fm = F(2); % [kmol/hr]
