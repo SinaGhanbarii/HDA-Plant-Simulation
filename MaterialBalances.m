@@ -31,6 +31,7 @@ eqs(3) = F2t + Tt - INt; %(i=t)
 
 % Material Balance for Reactor:
 
+
 % Material Balance for seperation system:
 eqs(4) = OUTh - RVh;
 eqs(5) = OUTm - RVm;
@@ -45,6 +46,13 @@ eqs(10) = RVm*SF - Vm;
 eqs(11) = RVh - Vh - Rh;
 eqs(12) = RVm - Vm - Rm;
 
-
+% Spec#1
+eqs(13) = F1m/(F1m+F1h)- x_M;
+% Spec#2
+eqs(14) = OUTb/(INt-OUTt) - s_b;
+% Spec#3
+eqs(15) = Bb - p_b;
+% Spec#4
+eqs(16) = INh/INt - HTR;
 
 end
