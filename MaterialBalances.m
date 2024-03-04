@@ -21,7 +21,7 @@ Vh = unk(12);
 Vm = unk(13);
 Rh = unk(14);
 Rm = unk(15);
-
+V = unk(16);
 % Equations:
 
 % Material Balance for mixer:
@@ -30,7 +30,14 @@ eqs(2) = F1m + Rm - INm; %(i=m)
 eqs(3) = F2t + Tt - INt; %(i=t)
 
 % Material Balance for Reactor:
+Fin = [INh INm INt 0 0];
+[~, Fout] = ode45(@(V,F)Kinetics(V,F,T),[0 V], Fin);
 
+OUTh = Fout(end,1);
+OUTm = Fout(end,2);
+OUTt = Fout(end,3);
+OUTb = Fout(end,4);
+OUTd = Fout(end,5);
 
 % Material Balance for seperation system:
 eqs(4) = OUTh - RVh;
