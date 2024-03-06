@@ -33,6 +33,12 @@ eqs(3) = F2t + Tt - INt; %(i=t)
 Fin = [INh INm INt 0 0];
 [~, Fout] = ode45(@(V,F)Kinetics(V,F,T),[0 V], Fin);
 
+% ??????
+OUT = ones(1,5);
+for i = 1: length(OUT)
+    OUT(i) = Fout(end,i);
+end
+
 OUTh = Fout(end,1);
 OUTm = Fout(end,2);
 OUTt = Fout(end,3);
