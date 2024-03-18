@@ -1,6 +1,4 @@
-clearvars
-close all
-clc
+clearvars, close all, clc
 %% Couple Kinetics and Material Balances - 11 March 2024
 % DoFs
 Tvalues = (600:50:750)+273.15;              %[K]
