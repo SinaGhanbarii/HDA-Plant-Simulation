@@ -54,14 +54,14 @@ plot(SFvalues,R)
 xlabel('Split Factor [-]')
 ylabel('Recycle, R [kmol/h]')
 
-
+Vent_frac = Vh./(Vh+Vm);        % Hydrogen fraction in vent stream
 
 figure(2)
-plot(SFvalues,Vh(1,:))
+plot(SFvalues,Vent_frac(1,:))
 hold on
-plot(SFvalues,Vh(2,:))
-plot(SFvalues,Vh(3,:))
-plot(SFvalues,Vh(4,:))
+plot(SFvalues,Vent_frac(2,:))
+plot(SFvalues,Vent_frac(3,:))
+plot(SFvalues,Vent_frac(4,:))
 grid on
 xlabel('Split Factor'); ylabel('Vh [kmol/hr]')
 legend('873.15 K', '923.15 K', '973.15 K', '1023.15 K')
