@@ -86,7 +86,7 @@ plot(SFvalues,EP2_sell(2,:))
 plot(SFvalues,EP2_sell(3,:))
 plot(SFvalues,EP2_sell(4,:))
 grid on
-xlabel('Split Factor'); ylabel('EP (M$/8000hr)')
+xlabel('Split Factor'); ylabel('EP (M$/year)')
 legend('873.15 K', '923.15 K', '973.15 K', '1023.15 K')
 title('EP2 for sell scenario')
 
@@ -110,7 +110,7 @@ for i=2:40
     plot(Tvalues,EP2_sell(:,i))
 end
 grid on
-xlabel('Temperature [K]'); ylabel('EP (M$/8000hr)')
+xlabel('Temperature [K]'); ylabel('EP (M$/year)')
 title('EP2 for sell scenario')
 
 subplot(1,2,2);
@@ -120,6 +120,6 @@ for i=2:40
     plot(Tvalues,EP2_burn(:,i))
 end
 grid on
-xlabel('Temperature [K]'); ylabel('EP (M$/8000hr)')
+xlabel('Temperature [K]'); ylabel('EP (M$/year)')
 title('EP2 for burn scenario')
 
