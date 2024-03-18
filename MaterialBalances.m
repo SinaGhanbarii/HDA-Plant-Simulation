@@ -33,11 +33,11 @@ eqs(3) = F2t + Tt - INt; %(i=t)
 Fin = [INh INm INt 0 0];
 [~, Fout] = ode45(@(V,F)Kinetics(V,F,T),[0 V], Fin);
 
-% ??????
-OUT = ones(1,5);
-for i = 1: length(OUT)
-    OUT(i) = Fout(end,i);
-end
+% % ??????
+% OUT = ones(1,5);
+% for i = 1: length(OUT)
+%     OUT(i) = Fout(end,i);
+% end
 
 OUTh = Fout(end,1);
 OUTm = Fout(end,2);
@@ -48,13 +48,13 @@ OUTd = Fout(end,5);
 % Material Balance for seperation system:
 eqs(4) = OUTh - RVh;
 eqs(5) = OUTm - RVm;
-eqs(6) = OUTt - RVt;
+eqs(6) = OUTt - Tt;
 eqs(7) = OUTb - Bb;
 eqs(8) = OUTd - Dd;
 
 
 % Material Balance for splitter:
-eqs(9) = RVh;
+eqs(9) = RVh*SF - Vh;
 eqs(10) = RVm*SF - Vm;
 eqs(11) = RVh - Vh - Rh;
 eqs(12) = RVm - Vm - Rm;

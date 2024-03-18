@@ -36,6 +36,6 @@ dFtdV = -R1;
 dFbdV = +R1 - 2*R2;
 dFddV = +R2;
 
-dFdV = [dFhdV dFmdV dFtdV dFbdV dFddV]';
+dFdV = [dFhdV; dFmdV; dFtdV; dFbdV; dFddV];
 
 end
