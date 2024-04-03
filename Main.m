@@ -121,3 +121,84 @@ grid on
 xlabel('Temperature [K]'); ylabel('EP (M$/year)')
 title('EP2 for burn scenario')
 
+% Conversion versus selectivity graph
+Conv_t = 100*(1 - Tt./INt);
+figure(5)
+subplot(1,2,1);
+plot(Conv_t(1,:),EP2_sell(1,:))
+hold on
+for i=2:4
+    plot(Conv_t(i,:),EP2_sell(i,:))
+end
+xlabel('Conversion (%)'); ylabel('EP (M$/year)')
+title('EP2 for sell scenario')
+subplot(1,2,2);
+plot(Conv_t(1,:),EP2_burn(1,:))
+hold on
+for i=2:4
+    plot(Conv_t(i,:),EP2_burn(i,:))
+end
+grid on
+xlabel('Conversion (%)'); ylabel('EP (M$/year)')
+title('EP2 for burn scenario')
+
+%% Excercise 4 - Calculating EP3 - 25 March 2024
+% This is for the Reactor
+M_and_S = 1100;
+H_D_ratio = 10; % Can be varied from 6 to 10
+D = ones(4,50);
+for i=1:4
+    for j=1:50
+        D(i,j) = (4*V(i,j)/(pi*H_D_ratio))^(1/3);
+    end
+end
+H = H_D_ratio*D;
+Fp_reactor_out = 1.45;
+Material = {'Carbon Steel', 'Stainless Steel 316','Monel', 'Titanium'};
+Fm_val = [1, 3.67,6.34, 7.89];
+Fm = containers.Map(Material,Fm_val);
+Fm_desired = double(Fm('Stainless Steel 316'));
+Fc = Fm_desired*Fp_reactor_out;
+CI_rec = 1.15*M_and_S/280*101.9*(D.^1.066).*(H.^0.802)*(2.18+Fc);
+
+figure(6)
+plot(SFvalues,V(1,:))
+hold on
+for i=2:4
+    plot(SFvalues,V(i,:))
+end
+grid on
+xlabel('Split Factor'); ylabel('Reactor Volume [m^3]')
+legend('873.15 K', '923.15 K', '973.15 K', '1023.15 K')
+
+figure(7)
+plot(SFvalues,D(1,:))
+hold on 
+for i=2:4
+    plot(SFvalues,D(i,:))
+end
+grid on
+xlabel('Split Factor'); ylabel('Reactor Diameter [m^3]')
+legend('873.15 K', '923.15 K', '973.15 K', '1023.15 K')
+
+figure(8)
+plot(SFvalues,CI_rec(1,:))
+hold on
+for i=2:4
+    plot(SFvalues,CI_rec(i,:))
+end
+grid on
+xlabel('Split Factor'); ylabel('CI_reactor')
+legend('873.15 K', '923.15 K', '973.15 K', '1023.15 K')
+
+figure(9)
+plot(SFvalues,R(1,:))
+hold on
+for i=2:4
+    plot(SFvalues,R(i,:))
+end
+grid on
+xlabel('Split Factor'); ylabel('Recycle Stream')
+legend('873.15 K', '923.15 K', '973.15 K', '1023.15 K')
+% This is for the Compressor
+
