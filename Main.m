@@ -49,7 +49,7 @@ figure(1)
 plot(SFvalues,R)
 xlabel('Split Factor [-]')
 ylabel('Recycle, R [kmol/h]')
-
+grid on
 %% Plotting H2 fraction in vent stream versus Split Factor - 18 March 2024
 Vent_frac = Vh./(Vh+Vm);        % Hydrogen fraction in vent stream
 figure(2)
@@ -131,6 +131,7 @@ for i=2:4
     plot(Conv_t(i,:),EP2_sell(i,:))
 end
 xlabel('Conversion (%)'); ylabel('EP (M$/year)')
+grid on
 title('EP2 for sell scenario')
 subplot(1,2,2);
 plot(Conv_t(1,:),EP2_burn(1,:))
@@ -200,5 +201,110 @@ end
 grid on
 xlabel('Split Factor'); ylabel('Recycle Stream')
 legend('873.15 K', '923.15 K', '973.15 K', '1023.15 K')
+
 % This is for the Compressor
 
+M_S=1110;
+Pin_IMP=449;            %[psi]
+Pout_IMP=537;           %[psi]
+R=8.314;                %[J/mol/K]
+T1=273.15+35;           %[K]
+Eff=0.9;                % Mechanical efficiency.
+Eff_Elect=0.9;          % Electric efficiency.
+Fc_Comp=1;
+Elec_cost=0.061095;     %[€/kWh]
+
+% CAPEX evaluation (compressor)
+Beta_IMP=Pout_IMP/Pin_IMP;
+yVh=Vh./(Vm+Vh);
+yVm=Vm./(Vm+Vh);
+
+gamma_h=yVh.*0.29;
+gamma_m=yVm.*0.23;
+
+gamma_mix=gamma_h+gamma_m;
+
+Duty_Id=R*T1*(Beta_IMP.^gamma_mix-1)./gamma_mix; %[J/mol] % Ideal specific duty.
+
+Duty_Comp=Duty_Id/Eff; %[J/mol]
+
+Duty_Elect=Duty_Comp/Eff_Elect; %[J/mol]
+
+Vmix=(Vh+Vm)*1000/3600; %[mol/s] Total flowrate to be compressed.
+
+Power_Comp=Vmix.*Duty_Elect; %[W] Actual electric power required for the compressor.
+
+Power_Comp_IMP=Power_Comp/1000*1.341; %[bph] Converting from W to bhp.
+
+IC_Comp=M_S/280*517.5*Power_Comp_IMP.^0.82*(2.11+Fc_Comp); % CAPEX of the compressor.
+
+CAPEX__Comp_Dep=IC_Comp/5; %[€/y] Compressor CAPEX with depreciation time accounted for.
+
+
+% OPEX evaluation (compressor)
+
+Duty_Comp_Total=Power_Comp*8000/1000; %[kWh/y] Duty of the compressor in a year.
+
+OPEX_Comp=Elec_cost*Duty_Comp_Total; %[€/y] OPEX of the compressor.
+
+% Graphics
+figure(10)
+plot(SFvalues,CAPEX__Comp_Dep(1,:)/1e6)
+hold on
+for i=2:4
+    plot(SFvalues,CAPEX__Comp_Dep(i,:)/1e6)
+end
+% plot(SFvalues,CAPEX__Comp_Dep(2,:)/1e6,'g')
+% hold on
+% plot(SFvalues,CAPEX__Comp_Dep(3,:)/1e6,'b')
+% hold on
+% plot(SFvalues,CAPEX__Comp_Dep(4,:)/1e6,'k')
+% hold off
+title('I.C. of the compressor vs. Split factor')
+xlabel('Split factor'); ylabel('I.C. of the compressor [M€/y]')
+grid on
+legend('600°C','650°C','700°C','750°C')
+
+
+figure(10)
+plot(SFvalues,OPEX_Comp(1,:)/1e6)
+hold on
+for i=2:4
+    plot(SFvalues,OPEX_Comp(i,:)/1e6)
+end
+% plot(SFvalues,OPEX_Comp(2,:)/1e6,'g')
+% hold on
+% plot(SFvalues,OPEX_Comp(3,:)/1e6,'b')
+% hold on
+% plot(SFvalues,OPEX_Comp(4,:)/1e6,'k')
+% hold off
+title('O.C. of the compressor vs. Split factor')
+xlabel('Split factor'); ylabel('O.C. of the compressor [M€/y]')
+grid on
+legend('600°C','650°C','700°C','750°C')
+
+% Calculating EP3 in burn scenario
+EP3_burn = EP2_burn - IC_Comp - CAPEX__Comp_Dep - OPEX_Comp;
+% Calculating EP3 in sell scenario
+EP3_sell = EP2_sell - IC_Comp - CAPEX__Comp_Dep - OPEX_Comp;
+
+figure(11)
+subplot(1,2,1)
+plot(SFvalues,EP3_sell(1,:))
+hold on
+for i=2:4
+    plot(SFvalues,EP3_sell(i,:))
+end
+xlabel('Split Factor'); ylabel('EP3 of Process[M€/y]')
+grid on
+title('Sell Scenario')
+
+subplot(1,2,2)
+plot(SFvalues,EP3_burn(1,:))
+hold on
+for i=2:4
+    plot(SFvalues,EP3_burn(i,:))
+end
+xlabel('Split Factor'); ylabel('EP3 of Process[M€/y]')
+grid on
+title('Burn Scenario')
